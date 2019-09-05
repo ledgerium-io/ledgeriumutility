@@ -1,0 +1,51 @@
+{
+  "name": "ledgeriumtestutility",
+  "version": "1.0.0",
+  "description": "This repo provides utility functions to test different scenarios on Ledgerium Blockchain e.g. deploy public and private smart contracts, execute transactions using web3js.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ledgerium-io/ledgeriumtestutility.git"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --timeout 1000000"
+  },
+  "author": "The Blockledger Pty Ltd.",
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-bignumber": "^2.0.2",
+    "eslint-utils": ">=1.4.1"
+  },
+  "dependencies": {
+    "assert": "^2.0.0",
+    "async": "2.6.1",
+    "axios": "^0.19.0",
+    "big-number": "^1.0.0",
+    "eslint": "^6.1.0",
+    "ethereum-tx-decoder": "^2.0.1",
+    "ethereumjs-tx": "^1.3.7",
+    "ethereumjs-util": "6.1.0",
+    "ethjs-abi": "^0.2.1",
+    "ethjs-unit": "npm:ethjs-unit-ledgerium",
+    "keythereum": "^1.0.4",
+    "mocha": "6.1.4",
+    "moment": "^2.22.2",
+    "promise": "7.1.1",
+    "quorum-js": "npm:quorum-xlg-js",
+    "solc": "^0.4.25",
+    "truffle-hdwallet-provider": "^1.0.15",
+    "web3": "^1.0.0-beta.36",
+    "websocket": "^1.0.26",
+    "node-forge": "^0.8.5",
+    "eslint-utils": ">=1.4.1"
+  },
+  "resolutions": {
+    "ethjs-unit": "npm:ethjs-unit-ledgerium",
+    "request": "2.88.0",
+    "quorum-js": "npm:quorum-xlg-js"
+  }
+}
