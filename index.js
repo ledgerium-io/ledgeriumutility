@@ -1,8 +1,12 @@
 'use strict';
+const fs = require('fs');
 const Web3 = require('web3');
-const Utils =  require('./web3util');
+const Utils = require('./web3util');
+const quorumjs = require("quorum-js");
+const sslCerts = require('./helpers/generatecerts')
 
 var provider,protocol,host,port,web3;
+var fromPubKey,toPubKey; //Used for Private Transactions
 var subscribePastEventsFlag = false;
 var webSocketProtocolFlag = false;
 global.webSocketProtocolFlag = webSocketProtocolFlag;
@@ -28,7 +32,7 @@ var main = async function () {
   for (let i=0; i<args.length ; i++) {
       let temp = args[i].split("=");
       switch (temp[0]) {
-            case "protocol":
+            case "protocol": {
                 switch (temp[1]) {
                     case "ws":
                         protocol = "ws://";
@@ -45,11 +49,13 @@ var main = async function () {
                         break;
                 }
                 break;
-            case "hostname":
+            }    
+            case "hostname": {
                 host = temp[1];
                 global.host = host;
                 break;
-            case "port":
+            }    
+            case "port": {
                 port = temp[1];
                 global.port = port;
                 URL = protocol + host + ":" + port;
@@ -63,12 +69,14 @@ var main = async function () {
                 }
                 global.web3 = web3;
                 break;
-            case "privateKeys":
+            }    
+            case "privateKeys": {
                 let prvKeys = temp[1].split(",");
                 utils.createAccountsAndManageKeysFromPrivateKeys(prvKeys);
                 utils.writeAccountsAndKeys();
                 break;
-            case "readkeyconfig":
+            }    
+            case "readkeyconfig": {
                 let readkeyconfig = temp[1];
                 switch(readkeyconfig){
                     case "true":
@@ -80,7 +88,8 @@ var main = async function () {
                         break;     
                 }
                 break;
-            case "usecontractconfig":
+            }    
+            case "usecontractconfig": {
                 let contractconfig = temp[1];
                 switch(contractconfig){
                     case "true":
@@ -92,37 +101,65 @@ var main = async function () {
                         break;     
                 }
                 break;
-            case "createPrivatePublicCombo":
+            }    
+            case "createPrivatePublicCombo": {
                 let mnemonic = temp[1];
                 await createPrivatePublicCombo(mnemonic);
                 break;
+            }    
             case "testPersonalImportAccount": {
                 let prvKeys = temp[1].split(",");
                 let password = prvKeys.pop();
                 await testPersonalImportAccount(prvKeys,password);
                 break;
             }    
-            case "testLedgeriumToken":
+            case "testLedgeriumToken": {
                 await testLedgeriumToken();
                 break;
-            case "transferXLG":
+            }                
+            case "transferXLG": {
                 let inputList = temp[1].split(",");
                 await transferXLG(inputList[0],inputList[1],inputList[2]);
                 break;
+            }    
             case "testInvoice": {
                 let list = temp[1].split(",");
                 await testInvoicesContract(list[0],list[1]);
                 break;
             }
-            case "testGreeter":
+            case "testGreeter": {
                 await testGreetingContract();
                 break;
-            case "testSimpleStorage":
+            }    
+            case "testSimpleStorage": {
                 await testSimpleStorageContract();
                 break;
-            case "testNewBlockEvent":
+            }                
+            case "generateTLSCerts": {
+                await generateTLSCerts();
+                break;
+            }
+            case "fromPubKey": {
+                fromPubKey = temp[1];
+                fromPubKey+="=";
+                break;
+            }                
+            case "toPubKey": {
+                toPubKey = temp[1];
+                toPubKey+="=";
+                break;
+            }    
+            case "testprivateTransactions": {
+                let inputValues = temp[1].split(",");
+                if(inputValues.length > 6) {
+                    await deployGreeterPrivate(inputValues[0],inputValues[1],inputValues[2],inputValues[3],inputValues[4],inputValues[5],inputValues[6],inputValues[7]);
+                }    
+                break;
+            }    
+            case "testNewBlockEvent": {
                 await testNewBlockEvent(host,port);
                 break;
+            }                
             default:
                 //throw "command should be of form :\n node deploy.js host=<host> file=<file> contracts=<c1>,<c2> dir=<dir>";
                 break;
@@ -443,6 +480,149 @@ async function testSimpleStorageContract() {
     }
 }
 
+async function generateTLSCerts() {
+    await sslCerts.generateTLSCerts()
+}
+
+var web31,web32,web33,web34;
+async function deployGreeterPrivate(host1, host2, host3, host4, toPrivatePort, toPort1, otherPort1, otherPort2) {
+    console.log(`${fromPubKey}`);
+    console.log(`${toPubKey}`);
+    const h1 = "http://" + host1 + ":" + port;
+    const h2 = "http://" + host2 + ":" + toPort1;
+    const h3 = "http://" + host3 + ":" + otherPort1;
+    const h4 = "http://" + host4 + ":" + otherPort2;
+    const toPrivateURL = "https://" + host + ":" + toPrivatePort;
+
+    web31 = new Web3(new Web3.providers.HttpProvider(h1));
+    web32 = new Web3(new Web3.providers.HttpProvider(h2));
+    web33 = new Web3(new Web3.providers.HttpProvider(h3));
+    web34 = new Web3(new Web3.providers.HttpProvider(h4));
+
+    // Todo: Read ABI from dynamic source.
+    var value = utils.readSolidityContractJSON("./build/contracts/Greeter");
+    if((value.length <= 0) || (value[0] == "") || (value[1] == "")) {
+        return;
+    }
+    var ethAccountToUse = global.accountAddressList[0];
+    var gasPrice = await web3.eth.getGasPrice();
+    console.log("gasPrice ",web3.utils.toHex(gasPrice)); 
+
+    //const fromAccountAddress = web3.eth.accounts.privateKeyToAccount(fromPrivateKey).address;
+    var balance = await web3.eth.getBalance(ethAccountToUse);
+    console.log("FromAccount", ethAccountToUse, "has balance of", web3.utils.fromWei(balance, 'xlg'), "xlg");
+
+    var deployedAddressGreeter;
+
+    let constructorParameters = [];
+    constructorParameters.push("Hi Ledgerium");
+
+    let tlsOptions;
+    try {
+         tlsOptions = {
+            key: fs.readFileSync('./certs/cert.key'),
+            clcert: fs.readFileSync('./certs/cert.pem'),
+            allowInsecure: true
+        }
+    } catch (e) {
+        if(e.code === 'ENOENT') {
+            console.log('Unable to read the certificate files. Do they exist?')
+        }
+        else console.log(e);
+        return;
+    }
+
+    //value[0] = Contract ABI and value[1] =  Contract Bytecode
+    let encodedABI = await utils.getContractEncodeABI(value[0], value[1],web31,constructorParameters);
+    const rawTransactionManager = quorumjs.RawTransactionManager(web31, {
+        privateUrl:toPrivateURL,
+        tlsSettings: tlsOptions
+    });
+    var abcd = '0x' + global.privateKey[ethAccountToUse];
+    var gasPrice = await web3.eth.getGasPrice();
+    const txnParams = {
+        gasPrice: web3.utils.toHex(gasPrice),
+        gasLimit: 4300000,
+        to: "",
+        value: 0,
+        data: encodedABI,        
+        isPrivate: true,
+        from: {
+            privateKey: abcd
+        },
+        privateFrom: fromPubKey,
+        privateFor: [toPubKey],
+        nonce: 0
+    };
+    web31.eth.getTransactionCount(ethAccountToUse, 'pending', (err, nonce) => {
+        txnParams.nonce = nonce;
+        console.log("Nonce :", nonce);
+        const newTx = rawTransactionManager.sendRawTransaction(txnParams);
+        newTx.then(function (tx){
+            deployedAddressGreeter = tx.contractAddress;
+            console.log("Greeter deployed contract address: ", deployedAddressGreeter);
+            console.log("Greeter deployed transactionHash: ", tx.transactionHash);
+            utils.writeContractsINConfig("Greeter",deployedAddressGreeter);
+            getGreeterValues(deployedAddressGreeter);
+        }).catch(function (err) {
+            console.log(err);
+        });
+    });
+}
+
+async function getGreeterValues(deployedAddressGreeter) {
+    // Todo: Read ABI from dynamic source.
+    var value = utils.readSolidityContractJSON("./build/contracts/Greeter");
+    if((value.length <= 0) || (value[0] == "") || (value[1] == "")) {
+        return;
+    }
+    
+    const contract1 = new web31.eth.Contract(JSON.parse(value[0]),deployedAddressGreeter);
+    const contract2 = new web32.eth.Contract(JSON.parse(value[0]),deployedAddressGreeter);
+    const contract3 = new web33.eth.Contract(JSON.parse(value[0]),deployedAddressGreeter);
+    const contract4 = new web34.eth.Contract(JSON.parse(value[0]),deployedAddressGreeter);
+
+    contract1.methods.getMyNumber().call().then(function (val, error) {
+        if(!error)
+            console.log('Host ' + web31._provider.host + ' value returned: ' + val);
+        else {
+            console.log('Host ' + web31._provider.host + ' error 1', error);
+        }
+    }).catch(err => {
+        console.log('Host ' + web31._provider.host + ' Message ' + err.message + '. Is this a private transaction?')
+    });
+
+    contract2.methods.getMyNumber().call().then(function (val, error) {
+        if(!error)
+        console.log('Host ' + web32._provider.host + ' value returned: ' + val);
+        else {
+            console.log('Host ' + web32._provider.host + ' error 2', error);
+        }
+    }).catch(err => {
+        console.log('Host ' + web32._provider.host + ' Message ' + err.message + '. Is this a private transaction?')
+    });
+
+    contract3.methods.getMyNumber().call().then(function (val, error) {
+        if(!error)
+        console.log('Host ' + web33._provider.host + ' value returned: ' + val);
+        else {
+            console.log('Host ' + web33._provider.host + ' error 3', error);
+        }
+    }).catch(err => {
+        console.log('Host ' + web33._provider.host + ' Message ' + err.message + '. Is this a private transaction?')
+    });
+
+    contract4.methods.getMyNumber().call().then(function (val, error) {
+        if(!error)
+        console.log('Host ' + web34._provider.host + ' value returned: ' + val);
+        else {
+            console.log('Host ' + web34._provider.host + ' error 4', error);
+        }
+    }).catch(err => {
+        console.log('Host ' + web34._provider.host + ' Message ' + err.message + '. Is this a private transaction?')
+    });
+}
+
 async function testNewBlockEvent(host, port) {
 
     //This is subscribing to an event from the blockchain and it has to be websocket!
@@ -462,9 +642,5 @@ async function testNewBlockEvent(host, port) {
     } catch (exception) {
         console.log(`${exception}`)
     }
-    // .on("data", function(blockHeader){
-    //     console.log(blockHeader);
-    // })
-    // .on("error", console.error);
     return;
 }

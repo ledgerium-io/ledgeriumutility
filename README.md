@@ -30,11 +30,13 @@ The ledgeriumutility can be used with different switches
 ### **Run the tests - Usages**
 
 - **Generate the public/private key combination against input of mnemonics on Ledgerium Blockchain**
+- The user can create a fresh Ledgerium External Owned Accounts (EOA) to interact with Ledgerium Blockchain by providing mnemonics. To know more about it, read https://docs.ledgerium.io/docs/accounts
   ```
   node index.js createPrivatePublicCombo=<mnemonics string>
   ``` 
 
 - **Import account to the given Block Producer of Ledgerium Blockchain**
+- Read about the option at https://docs.ledgerium.io/docs/accounts#section--externally-owned-accounts-eoas-
   ```
   node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> testPersonalImportAccount=<private key> <password>
   ```
@@ -49,17 +51,17 @@ The ledgeriumutility can be used with different switches
   node index.js protocol=<http/ws> hostname=<Block Producer ip address> port=<rpc/ws port> transferXLG=<private key of 'from' account>,<to account address>,<XLG amount>
   ```
 
-- **Add Invoice hash to Invoice smart contract on Ledgerium Blockchain**
+- **Deploy fresh Invoice smart contract and add Invoice hash to it on Ledgerium Blockchain**
   ```
   node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> readkeyconfig=true testInvoice=<InvoiceID>,<Invoice Hash>
   ```
 
-- **Deploy Greeter smart contract on Ledgerium Blockchain**
+- **Deploy fresh Greeter smart contract on Ledgerium Blockchain**
   ```
   node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> readkeyconfig=true testGreeter
   ```
 
-- **Deploy SimpleStorage smart contract on Ledgerium Blockchain**
+- **Deploy fresh SimpleStorage smart contract on Ledgerium Blockchain**
   ```
   node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> readkeyconfig=true testSimpleStorage
   ```
@@ -68,6 +70,22 @@ The ledgeriumutility can be used with different switches
   ```
   node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> testNewBlockEvent
   ```
+
+
+- **Deploy Greeter smart contract in private transaction between Node 'from' and Node 'to' on Ledgerium Blockchain**
+ 
+  For first time usages with **generatetlscerts** option
+ 
+   Generate the TLS certificates needed for communicating with tessera node using https for private transactions. The subject information used for creating the certificates can be found in certs/config.json. When regenerating the certificates, we recommend to use unique subject information. This option needs to be used only once to generate certificate before first usages. 
+
+   ```
+   node index.js protocol=<http/ws> hostname=<masternode node ip address> port=<rpc/ws port> readkeyconfig=true generatetlscerts fromPubKey=<public key of 'from' node> toPubKey=<public key of 'to' node> testprivateTransactions=<From Node>,<Node1>,<Node2>,<Node3>,<tessera third party port of 'from' node>,<RPC Port Node1>,<RPC Port Node2>,<RPC Port Node3>
+   ```
+
+  Next time usage without **generatetlscerts** option
+   ```
+   node index.js protocol=<http/ws> hostname=<masternode node ip address> port=<rpc/ws port> readkeyconfig=true fromPubKey=<public key of 'from' node> toPubKey=<public key of 'to' node> testprivateTransactions=<From Node>,<Node1>,<Node2>,<Node3>,<tessera third party port of 'from' node>,<RPC Port Node1>,<RPC Port Node2>,<RPC Port Node3>
+   ```
 
 ## **Additional:**
 If one needs to develop and transact on custom developed smart contract after deploying, the code has to be compiled and .bin and .abi files are to be made available at ./build/contracts folder.

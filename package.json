@@ -1,11 +1,11 @@
 {
-  "name": "ledgeriumtestutility",
+  "name": "ledgeriumutility",
   "version": "1.0.0",
   "description": "This repo provides utility functions to test different scenarios on Ledgerium Blockchain e.g. deploy public and private smart contracts, execute transactions using web3js.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ledgerium-io/ledgeriumtestutility.git"
+    "url": "https://github.com/ledgerium-io/ledgeriumutility.git"
   },
   "directories": {
     "test": "test"
