@@ -17,7 +17,7 @@
             "args":["protocol=ws", "hostname=flinders01.ledgerium.io", "port=9000", "readkeyconfig=true", "usecontractconfig=true", "testInvoice=0x4321,790afdeb16ae5c22453f8eeee25038c314f09d64fc51b8e21a5a82225e54fde6"]
             //"args":["protocol=http", "hostname=flinders01.ledgerium.io", "port=8545", "readkeyconfig=true", "testGreeter"],
             //"args":["protocol=ws", "hostname=flinders01.ledgerium.io", "port=8545", "readkeyconfig=true", "testSimpleStorage"],
-            //"args":["protocol=http", "hostname=flinders01.ledgerium.io", "port=8545", "readkeyconfig=true", "fromPubKey=YJ8y4celKmqRW8OZZ4dncmFf4c1wp/kdu3cZ7bkdjkM=", "toPubKey=9Vg4BFW1Dmps/e332jQyZZbF/8TM64YjhWthtFPg0Gk=", "testprivateTransactions=flinders01.ledgerium.io,159.89.142.250,159.203.21.124,94.237.76.121,10100,8545,8545,8545"]
+            //"args":["protocol=ws", "hostname=flinders01.ledgerium.io", "port=9000", "readkeyconfig=true", "fromPubKey=CR4JzvH4wXHRk9Yeczf7nDRiqxy803SOWJbpb3PePRU=", "toPubKey=XHyEdlpicNmviBqwJUIO16oKFFR3iBQ6mkJvNayL4hs=", "testprivateTransactions=flinders01.ledgerium.io,flinders02.ledgerium.io,flinders03.ledgerium.io,flinders04.ledgerium.io,10100,8545,8545,8545"]
             //"args":["protocol=ws", "hostname=flinders01.ledgerium.io", "port=9000", "testNewBlockEvent"],
         }
     ]
