@@ -394,7 +394,7 @@ class utils {
         var noOfPrivateKeys = Object.keys(privateKey).length;
         var noOfAccounts = accountAddressList.length;
         if(noOfAccounts > 0 && noOfPrivateKeys > 0 && (noOfAccounts == noOfPrivateKeys)){
-            console.log(accountAddressList.length + " ethereum accounts are created using private keys!");
+            console.log(accountAddressList.length + " Ledgerium accounts are created using private keys!");
         }
         global.accountAddressList = accountAddressList;
         global.privateKey = privateKey;
@@ -418,7 +418,7 @@ class utils {
                 keyData = JSON.parse(keyData);
             }    
             var key;
-            console.log("There are", accountAddressList.length, "ethereum accounts in the blockchain");
+            console.log("There are", accountAddressList.length, "Ledgerium accounts in the blockchain");
             if(accountAddressList.length > 0){
                 var i = 0;
                 accountAddressList.forEach(eachElement => {
@@ -462,7 +462,7 @@ class utils {
             var keyData = fs.readFileSync(privateKeyFileName,"utf8");
             var privateKey = JSON.parse(keyData);
             var accountAddressList = Object.keys(privateKey);
-            console.log("There are", accountAddressList.length, "ethereum accounts & private keys in the privatekey file");
+            console.log("There are", accountAddressList.length, "Ledgerium accounts & private keys in the privatekey file");
             global.accountAddressList = accountAddressList;
             global.privateKey = privateKey;
             return true;
@@ -477,7 +477,7 @@ class utils {
         var privateKeyFileName = __dirname + "/keystore/" + "privatekey.json";
         var data = JSON.stringify(privateKey,null, 2);
         fs.writeFileSync(privateKeyFileName,data);
-        console.log(accountAddressList.length + " ethereum accounts & private keys are written to the privateKey.json file");
+        console.log(accountAddressList.length + " Ledgerium accounts & private keys are written to the privateKey.json file");
         return false;
     }
       

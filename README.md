@@ -14,8 +14,8 @@ The ledgeriumutility can be used with different switches
 - http
 
 **hostname**
-- testnet.ledgerium.net <If you want to connect to toorak>
-- 138.197.193.201 <If you want to connect to flinders specific node>
+- toorak01.ledgerium.net <If you want to connect to toorak specific node>
+- flinders01.ledgerium.io <If you want to connect to flinders specific node>
 
 **port**
 - e.g. 9000 for Websocket
@@ -38,12 +38,12 @@ The ledgeriumutility can be used with different switches
 - **Import account to the given Block Producer of Ledgerium Blockchain**
 - Read about the option at https://docs.ledgerium.io/docs/accounts#section--externally-owned-accounts-eoas-
   ```
-  node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> testPersonalImportAccount=<private key> <password>
+  node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> testPersonalImportAccount=<private key> <password>
   ```
 
 - **Deploy LedgeriumToken smart contract on Ledgerium Blockchain**  
   ```
-  node index.js protocol=<http/ws> hostname=<Block Producer node IP address> port=<rpc/ws port> readkeyconfig=true testLedgeriumToken
+  node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> readkeyconfig=true testLedgeriumToken
   ```
 
 - **Transfer XLG from one Ledgerium account to another Ledgerium account on Ledgerium Blockchain**
@@ -53,22 +53,22 @@ The ledgeriumutility can be used with different switches
 
 - **Deploy fresh Invoice smart contract and add Invoice hash to it on Ledgerium Blockchain**
   ```
-  node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> readkeyconfig=true testInvoice=<InvoiceID>,<Invoice Hash>
+  node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> readkeyconfig=true testInvoice=<InvoiceID>,<Invoice Hash>
   ```
 
 - **Deploy fresh Greeter smart contract on Ledgerium Blockchain**
   ```
-  node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> readkeyconfig=true testGreeter
+  node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> readkeyconfig=true testGreeter
   ```
 
 - **Deploy fresh SimpleStorage smart contract on Ledgerium Blockchain**
   ```
-  node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> readkeyconfig=true testSimpleStorage
+  node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> readkeyconfig=true testSimpleStorage
   ```
 
 - **Subscribe the 'newBlockHeaders' event on Ledgerium Blockchain**
   ```
-  node index.js protocol=<http/ws> hostname=<Block Producer node ip address> port=<rpc/ws port> testNewBlockEvent
+  node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> testNewBlockEvent
   ```
 
 
@@ -79,12 +79,12 @@ The ledgeriumutility can be used with different switches
    Generate the TLS certificates needed for communicating with tessera node using https for private transactions. The subject information used for creating the certificates can be found in certs/config.json. When regenerating the certificates, we recommend to use unique subject information. This option needs to be used only once to generate certificate before first usages. 
 
    ```
-   node index.js protocol=<http/ws> hostname=<masternode node ip address> port=<rpc/ws port> readkeyconfig=true generatetlscerts fromPubKey=<public key of 'from' node> toPubKey=<public key of 'to' node> testprivateTransactions=<From Node>,<Node1>,<Node2>,<Node3>,<tessera third party port of 'from' node>,<RPC Port Node1>,<RPC Port Node2>,<RPC Port Node3>
+   node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> readkeyconfig=true generatetlscerts fromPubKey=<public key of 'from' node> toPubKey=<public key of 'to' node> testprivateTransactions=<From Node>,<Node1>,<Node2>,<Node3>,<tessera third party port of 'from' node>,<RPC Port Node1>,<RPC Port Node2>,<RPC Port Node3>
    ```
 
   Next time usage without **generatetlscerts** option
    ```
-   node index.js protocol=<http/ws> hostname=<masternode node ip address> port=<rpc/ws port> readkeyconfig=true fromPubKey=<public key of 'from' node> toPubKey=<public key of 'to' node> testprivateTransactions=<From Node>,<Node1>,<Node2>,<Node3>,<tessera third party port of 'from' node>,<RPC Port Node1>,<RPC Port Node2>,<RPC Port Node3>
+   node index.js protocol=<http/ws> hostname=<Block Producer Node Hostname> port=<rpc/ws port> readkeyconfig=true fromPubKey=<public key of 'from' node> toPubKey=<public key of 'to' node> testprivateTransactions=<From Node>,<Node1>,<Node2>,<Node3>,<tessera third party port of 'from' node>,<RPC Port Node1>,<RPC Port Node2>,<RPC Port Node3>
    ```
 
 ## **Additional:**
