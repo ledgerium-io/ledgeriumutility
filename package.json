@@ -40,8 +40,7 @@
     "truffle-hdwallet-provider": "^1.0.15",
     "web3": "^1.0.0-beta.36",
     "websocket": "^1.0.26",
-    "node-forge": "^0.8.5",
-    "eslint-utils": ">=1.4.1"
+    "node-forge": "^0.8.5"
   },
   "resolutions": {
     "ethjs-unit": "npm:ethjs-unit-ledgerium",
